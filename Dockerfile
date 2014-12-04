@@ -9,7 +9,7 @@ RUN apt-get update \
 	&& rm -rf /var/lib/apt/lists/*
 	
 
-# SICKBEARD install -------------
+# SICKRAGE install -------------
 ENV SICKRAGE_VERSION v3.3.3
 
 WORKDIR /opt/sickrage
