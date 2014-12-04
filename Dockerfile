@@ -10,24 +10,21 @@ RUN apt-get update \
 	
 
 # SICKBEARD install -------------
-ENV SICKRAGE_VERSION develop
+ENV SICKRAGE_VERSION v3.3.3
 
 WORKDIR /opt/sickrage
-RUN git clone https://github.com/SiCKRAGETV/SickRage /opt/sickrage && git checkout $SICKRAGE_VERSION
-
-# SICKBEARD update script
-COPY sickbeard-update.sh /opt/sickbeard-update.sh
-RUN chmod +x /opt/sickbeard-update.sh
+RUN curl -k -SL "https://github.com/SiCKRAGETV/SickRage/archive/$SICKRAGE_VERSION.tar.gz" \
+	| tar -xzf - -C /opt/sickrage --strip-components=1
 
 # SUPERVISOR -------------
-COPY supervisord-sickbeard.conf /etc/supervisor/conf.d/supervisord-sickbeard.conf
+COPY supervisord-sickrage.conf /etc/supervisor/conf.d/supervisord-sickrage.conf
 
 # DOCKER -------------
 VOLUME /data
 
 # Supervisord web interface -------
 EXPOSE 9999
-# sickbeard http port
+# sickrage http port
 EXPOSE 8081
 
 # run command by default
