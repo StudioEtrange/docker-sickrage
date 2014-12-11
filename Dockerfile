@@ -9,15 +9,12 @@ RUN apt-get update \
 	&& rm -rf /var/lib/apt/lists/*
 	
 
-# SICKBEARD install -------------
-ENV SICKRAGE_VERSION develop
+# SICKRAGE install -------------
+ENV SICKRAGE_VERSION v3.3.3
 
 WORKDIR /opt/sickrage
-RUN git clone https://github.com/SiCKRAGETV/SickRage /opt/sickrage && git checkout $SICKRAGE_VERSION
-
-# SICKRAGE update script
-COPY sickrage-update.sh /opt/sickrage-update.sh
-RUN chmod +x /opt/sickrage-update.sh
+RUN curl -k -SL "https://github.com/SiCKRAGETV/SickRage/archive/$SICKRAGE_VERSION.tar.gz" \
+	| tar -xzf - -C /opt/sickrage --strip-components=1
 
 # SUPERVISOR -------------
 COPY supervisord-sickrage.conf /etc/supervisor/conf.d/supervisord-sickrage.conf
