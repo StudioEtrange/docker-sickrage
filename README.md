@@ -17,7 +17,8 @@ then go to http://localhost:8081
 
 ## Version and Tag
 
-* docker-tag:latest or github-branch:master ==> latest stable sickrage version available through this repository
+* docker-tag:latest ==> latest stable sickrage version available through this repository
+* github-branch:master ==> work in progress based on latest stable sickrage version available through this repository
 * docker-tag:X.X.X or github-branch:X.X.X ==> sickrage version X.X.X
 * docker-tag:dev or github-branch:dev ==> development version from sickrage git repository
 
