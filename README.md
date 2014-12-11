@@ -19,8 +19,8 @@ then go to http://localhost:8081
 
 * docker-tag:latest ==> latest stable sickrage version available through this repository
 * github-branch:master ==> work in progress based on latest stable sickrage version available through this repository
-* docker-tag:X.X.X or github-branch:X.X.X ==> sickrage version X.X.X
-* docker-tag:dev or github-branch:dev ==> development version from sickrage git repository
+* docker-tag:X.X.X connected to github-branch:X.X.X ==> sickrage version X.X.X
+* docker-tag:dev connected to github-branch:dev ==> development version from sickrage git repository
 
 In dev case, to have an uptodate image you should
 * build the docker image yourself (see build from github souce below)
