@@ -36,4 +36,16 @@ for rel in $releases; do
 	echo
 done
 
+echo "******** UPDATE README ********"
+releases=$(curl -sL https://api.github.com/repos/SiCKRAGETV/SickRage/releases | grep tag_name |  cut -d '"' -f 4 | tr -d 'v' | tr -d '')
+for rel in $releases; do
+	list_release="$list_release, $rel"
+done
+sed -i .bak -e "s/latest,.*/latest$list_release/" "README.md"
+rm -f "README.md.bak"
+
+echo
+echo "************************************"
+echo " YOU SHOULD NOW ADD MISSING RELEASE TAG THROUGH"
+echo " Docker Hub WebUI : AUTOMATED BUILD REPOSITORY"
 

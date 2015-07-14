@@ -15,15 +15,11 @@ for running latest version of sickrage :
 
 then go to http://localhost:8081
 
-## Version and Tag
+## Available docker tag
 
-* docker-tag:latest ==> latest stable sickrage version available through this repository
-* github-branch:master ==> work in progress based on latest stable sickrage version available through this repository
+	latest, 4.0.22, 4.0.19
 
-In dev case, to have an uptodate image you should
-* build the docker image yourself (see build from github souce below)
-* OR launch in the container the script /opt/sickrage-update.sh
-
+Available tag for studioetrange/docker-sickrage:TAG
 
 ## Instruction
 
@@ -53,7 +49,7 @@ _Note : you have to choose a DATA_DIR, SICKRAGE_HTTP_PORT, SUPERVISOR_HTTP_WEB a
 
 	docker run -i -t studioetrange/docker-sickrage bash
 
-## Access point
+## Access points
 
 ### sickrage
 
@@ -63,10 +59,10 @@ _Note : you have to choose a DATA_DIR, SICKRAGE_HTTP_PORT, SUPERVISOR_HTTP_WEB a
 
 	http://localhost:SUPERVISOR_HTTP_WEB/
 
-## Github / docker repository
+## Notes on Github / Docker Hub Repository
 
-This github repository is linked to an automated build in docker offical registry.
+* This github repository is linked to an automated build in docker hub registry.
 
 	https://registry.hub.docker.com/u/studioetrange/docker-sickrage/
 
-_update.sh_ update and add new sickrage versions managed through this github repository, but you can use it only if you have owner access to this docker registry. 
+* _update.sh_ is an admin script which update and add new sickrage versions. This script do not auto create missing tag in docker hub webui. It is only for admin/owner purpose.
