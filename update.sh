@@ -30,7 +30,8 @@ for rel in $releases; do
 	echo " ** full version id : $version_full"
 
 	mkdir -p "$version_full"
-	cp Dockerfile "$version_full/Dockerfile"
+	cp -f supervisord* "$version_full"
+	cp -f Dockerfile "$version_full/Dockerfile"
 	sed -i .bak -e "s/ENV SICKRAGE_VERSION.*/ENV SICKRAGE_VERSION $version_name/" "$version_full/Dockerfile"
 	rm -f "$version_full/Dockerfile.bak"
 	echo
