@@ -4,7 +4,7 @@
 * Based on sickrage github source code
 * Choice of sickrage version
 * Use supervisor to manage sickrage process
-* By default sickrage configuration files will be in a /data/sickrage (You should map a docker volume to /data)
+* By default sickrage configuration files will be in a /data/sickrage _(You should map a docker volume to /data)_
 
 
 ## Sample Usage
@@ -14,6 +14,8 @@ for running latest version of sickrage :
 	docker run -d -v $(pwd):/data -p 8081:8081 studioetrange/docker-sickrage:latest
 
 then go to http://localhost:8081
+
+It will pull lastest version from docker hub registry.
 
 ## Docker tags
 
