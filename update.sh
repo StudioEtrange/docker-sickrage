@@ -74,7 +74,11 @@ done
 
 echo "******** UPDATE README ********"
 list_release=$(echo $releases | tr -d 'v' | sed -e 's/ /\, /g')
+last_release_tag=$(echo $last_release | tr -d 'v')
 sed -i .bak -e "s/latest,.*/latest, $list_release/" "README.md"
+rm -f "README.md.bak"
+
+sed -i .bak -e "s/^Current latest tag is version \*.*\*/Current latest tag is version \*$last_release_tag\*/" "README.md"
 rm -f "README.md.bak"
 
 echo

@@ -15,11 +15,13 @@ for running latest version of sickrage :
 
 then go to http://localhost:8081
 
-## Available docker tag
+## Docker tags
+
+Available tag for studioetrange/docker-sickrage:*TAG*
 
 	latest, 4.0.22, 4.0.19
 
-Available tag for studioetrange/docker-sickrage:TAG
+Current latest tag is version *4.0.22*
 
 ## Instruction
 
@@ -37,13 +39,13 @@ Available tag for studioetrange/docker-sickrage:TAG
 	
 	docker run -v DATA_DIR:/data -p SICKRAGE_HTTP_PORT:8081 -p SUPERVISOR_HTTP_WEB:9999 studioetrange/docker-sickrage:SICKRAGE_VERSION
 
-_Note : you have to choose a DATA_DIR, SICKRAGE_HTTP_PORT, SUPERVISOR_HTTP_WEB and SICKRAGE_VERSION_
+_Note : you have to choose DATA_DIR, SICKRAGE_HTTP_PORT, SUPERVISOR_HTTP_WEB and SICKRAGE_VERSION_
 
 ### run sickrage daemonized
 
 	docker run -d -v DATA_DIR:/data -p SICKRAGE_HTTP_PORT:8081 -p SUPERVISOR_HTTP_WEB:9999 studioetrange/docker-sickrage:SICKRAGE_VERSION
 
-_Note : you have to choose a DATA_DIR, SICKRAGE_HTTP_PORT, SUPERVISOR_HTTP_WEB and SICKRAGE_VERSION_
+_Note : you have to choose DATA_DIR, SICKRAGE_HTTP_PORT, SUPERVISOR_HTTP_WEB and SICKRAGE_VERSION_
 
 ### run a shell inside this container (without sickrage running)
 
@@ -55,7 +57,7 @@ _Note : you have to choose a DATA_DIR, SICKRAGE_HTTP_PORT, SUPERVISOR_HTTP_WEB a
 
 	http://localhost:SICKRAGE_HTTP_PORT/
 
-### Supervisor
+### supervisor
 
 	http://localhost:SUPERVISOR_HTTP_WEB/
 
@@ -65,4 +67,4 @@ _Note : you have to choose a DATA_DIR, SICKRAGE_HTTP_PORT, SUPERVISOR_HTTP_WEB a
 
 	https://registry.hub.docker.com/u/studioetrange/docker-sickrage/
 
-* _update.sh_ is an admin script which update and add new sickrage versions. This script do not auto create missing tag in docker hub webui. It is only for admin/owner purpose.
+* _update.sh_ is only an admin script which update and add new sickrage versions. This script do not auto create missing tag in docker hub webui. It is only for admin/owner purpose.
