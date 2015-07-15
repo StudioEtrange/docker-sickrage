@@ -4,9 +4,44 @@ set -e
 _CURRENT_FILE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$_CURRENT_FILE_DIR"
 
+GITHUB_REPO="SiCKRAGETV/SickRage"
+
+
+function github_releases() {
+	local max=$1
+
+	local result=""
+	local last_page=$(curl -i -sL "https://api.github.com/repos/$GITHUB_REPO/releases" | grep rel=\"last\" | cut -d "," -f 2 | cut -d "=" -f 2 | cut -d ">" -f 1)
+	for i in $(seq 1 $last_page); do 
+		result="$result $(curl -sL https://api.github.com/repos/$GITHUB_REPO/releases?page=$i | grep tag_name | cut -d '"' -f 4)"
+	done
+
+	local sorted
+	[ "$max" == "" ] && sorted=$(echo "$result" | tr ' ' '\n' | sort -r | tr '\n' ' ' | sed -e 's/^ *//' -e 's/ *$//')
+	[ ! "$max" == "" ] && sorted=$(echo "$result" | tr ' ' '\n' | sort -r  | head -n $max | tr '\n' ' ' | sed -e 's/^ *//' -e 's/ *$//' )
+	echo "$sorted"
+}
+
+function github_tags() {
+	local max=$1
+
+	local result=""
+	local last_page=$(curl -i -sL "https://api.github.com/repos/$GITHUB_REPO/tags" | grep rel=\"last\" | cut -d "," -f 2 | cut -d "=" -f 2 | cut -d ">" -f 1)
+	for i in $(seq 1 $last_page); do 
+		result="$result $(curl -sL https://api.github.com/repos/$GITHUB_REPO/tags?page=$i | grep name | cut -d '"' -f 4)"
+	done
+
+	local sorted
+	[ "$max" == "" ] && sorted=$(echo "$result" | tr ' ' '\n' | sort -r | tr '\n' ' ' | sed -e 's/^ *//' -e 's/ *$//')
+	[ ! "$max" == "" ] && sorted=$(echo "$result" | tr ' ' '\n' | sort -r  | head -n $max | tr '\n' ' ' | sed -e 's/^ *//' -e 's/ *$//' )
+	echo "$sorted"
+}
+
+
+
 echo "******** UPDATE LAST RELEASE ********"
 # Update last release
-last_release=$(curl -sL https://api.github.com/repos/SiCKRAGETV/SickRage/releases | grep tag_name | head -n 1 |  cut -d '"' -f 4 | tr -d '')
+last_release=$(github_releases 1)
 version_name="$last_release"
 version_full=$(echo $version_name | tr -d 'v')
 version_major=$(echo $version_full | cut -d '.' -f 1)
@@ -20,7 +55,7 @@ rm -f Dockerfile.bak
 echo
 echo "******** UPDATE ALL RELEASES ********"
 # Update all releasese
-releases=$(curl -sL https://api.github.com/repos/SiCKRAGETV/SickRage/releases | grep tag_name |  cut -d '"' -f 4 | tr -d '')
+releases=$(github_releases)
 for rel in $releases; do
 	version_name="$rel"
 	version_full=$(echo $version_name | tr -d 'v')
@@ -38,11 +73,8 @@ for rel in $releases; do
 done
 
 echo "******** UPDATE README ********"
-releases=$(curl -sL https://api.github.com/repos/SiCKRAGETV/SickRage/releases | grep tag_name |  cut -d '"' -f 4 | tr -d 'v' | tr -d '')
-for rel in $releases; do
-	list_release="$list_release, $rel"
-done
-sed -i .bak -e "s/latest,.*/latest$list_release/" "README.md"
+list_release=$(echo $releases | tr -d 'v' | sed -e 's/ /\, /g')
+sed -i .bak -e "s/latest,.*/latest, $list_release/" "README.md"
 rm -f "README.md.bak"
 
 echo
