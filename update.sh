@@ -5,7 +5,33 @@ _CURRENT_FILE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$_CURRENT_FILE_DIR"
 
 GITHUB_REPO="SiCKRAGETV/SickRage"
+RELEASE_NAME_FILTER="v"
 
+# Use github tag instead of github release
+USE_TAG_AS_RELEASE=0
+
+# SPECIFIC FUNCTIONS ----------------------------
+function update_dockerfile() {
+	local path=$1
+	local version=$2
+
+	sed -i .bak -e "s,ENV SICKRAGE_VERSION.*,ENV SICKRAGE_VERSION $version," "$path"
+	rm -f "$path".bak
+}
+
+
+
+# GENERIC FUNCTIONS ----------------------------
+function update_readme() {
+	local path=$1
+	local version=$2
+	local list="$3"
+
+	sed -i .bak -e "s/latest,.*/latest, $list/" "README.md"
+	sed -i .bak -e "s/^Current latest tag is version __.*__/Current latest tag is version __"$version"__/" "$path"
+	
+	rm -f "$path".bak
+}
 
 function github_releases() {
 	local max=$1
@@ -39,46 +65,61 @@ function github_tags() {
 
 
 
-echo "******** UPDATE LAST RELEASE ********"
-# Update last release
-last_release=$(github_releases 1)
-version_name="$last_release"
-version_number=$(echo $version_name | sed -e 's/v//g')
-echo " * Process last release $version_name"
-echo " ** version id : $version_number"
 
-sed -i .bak -e "s,ENV SICKRAGE_VERSION.*,ENV SICKRAGE_VERSION $version_name," "Dockerfile"
-rm -f Dockerfile.bak
+
+
+
+
+
+
+# MAIN ----------------------------
+# github tag does not have special char before tag number -- sed regexp can not be empty, so a foo string is used
+[ "$USE_TAG_AS_RELEASE" == "1" ] && RELEASE_NAME_FILTER="XXXXXXXX"
 
 echo
-echo "******** UPDATE ALL RELEASES ********"
+echo "******** UPDATE LAST ********"
+# Update last release
+[ "$USE_TAG_AS_RELEASE" == "1" ] && last_release=$(github_tags 1)
+[ ! "$USE_TAG_AS_RELEASE" == "1" ] && last_release=$(github_releases 1)
+
+version_name="$last_release"
+version_number=$(echo $version_name | sed -e "s,$RELEASE_NAME_FILTER,,g")
+echo " * Process last release $version_name"
+echo " ** version number : $version_number"
+
+update_dockerfile "Dockerfile" "$version_name"
+
+echo
+echo "******** UPDATE ALL ********"
 # Update all releasese
-releases=$(github_releases)
+rm -Rf "ver"
+[ "$USE_TAG_AS_RELEASE" == "1" ] && releases=$(github_tags)
+[ ! "$USE_TAG_AS_RELEASE" == "1" ] && releases=$(github_releases)
+
 for rel in $releases; do
 	version_name="$rel"
-	version_number=$(echo $version_name | sed -e 's/v//g')
+	version_number=$(echo $version_name | sed -e "s,$RELEASE_NAME_FILTER,,g")
 	echo " * Process release $version_name"
 	echo " ** version number : $version_number"
 
-	mkdir -p "$version_number"
-	cp -f supervisord* "$version_number"
-	cp -f Dockerfile "$version_number/Dockerfile"
-	sed -i .bak -e "s,ENV SICKRAGE_VERSION.*,ENV SICKRAGE_VERSION $version_name," "$version_number/Dockerfile"
-	rm -f "$version_number/Dockerfile.bak"
+	mkdir -p "ver/$version_number"
+	cp -f supervisord* "ver/$version_number"
+	cp -f Dockerfile "ver/$version_number/Dockerfile"
+	update_dockerfile "ver/$version_number/Dockerfile" "$version_name"
 	echo
 done
 
 echo "******** UPDATE README ********"
-list_release=$(echo $releases | sed -e 's/v//g' | sed -e 's/ /\, /g')
-last_release_tag=$(echo $last_release | sed -e 's/v//g')
-sed -i .bak -e "s/latest,.*/latest, $list_release/" "README.md"
-rm -f "README.md.bak"
+list_release=$(echo $releases | sed -e "s,$RELEASE_NAME_FILTER,,g" | sed -e 's/ /\, /g')
+last_release_tag=$(echo $last_release | sed -e "s,$RELEASE_NAME_FILTER,,g")
 
-sed -i .bak -e "s/^Current latest tag is version \*.*\*/Current latest tag is version \*$last_release_tag\*/" "README.md"
-rm -f "README.md.bak"
+update_readme "README.md" "$last_release_tag" "$list_release"
 
 echo
 echo "************************************"
-echo " YOU SHOULD NOW ADD MISSING RELEASE TAG THROUGH"
+echo " YOU SHOULD NOW ADD MISSING VERSION THROUGH"
 echo " Docker Hub WebUI : AUTOMATED BUILD REPOSITORY"
+
+
+
 

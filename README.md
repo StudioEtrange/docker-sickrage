@@ -19,11 +19,11 @@ It will pull lastest version from docker hub registry.
 
 ## Docker tags
 
-Available tag for studioetrange/docker-sickrage:*TAG*
+Available tag for studioetrange/docker-sickrage:__TAG__
 
 	latest, 4.0.22, 4.0.19
 
-Current latest tag is version *4.0.22*
+Current latest tag is version __4.0.22__
 
 ## Instruction
 
