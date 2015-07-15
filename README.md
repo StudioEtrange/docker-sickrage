@@ -27,7 +27,7 @@ Current latest tag is version *4.0.22*
 
 ## Instruction
 
-### build from this github repository
+### build from github repository
 
 	git pull https://github.com/StudioEtrange/docker-sickrage
 	cd docker-sickrage
@@ -41,13 +41,9 @@ Current latest tag is version *4.0.22*
 	
 	docker run -v DATA_DIR:/data -p SICKRAGE_HTTP_PORT:8081 -p SUPERVISOR_HTTP_WEB:9999 studioetrange/docker-sickrage:SICKRAGE_VERSION
 
-_Note : you have to choose DATA_DIR, SICKRAGE_HTTP_PORT, SUPERVISOR_HTTP_WEB and SICKRAGE_VERSION_
-
 ### run sickrage daemonized
 
 	docker run -d -v DATA_DIR:/data -p SICKRAGE_HTTP_PORT:8081 -p SUPERVISOR_HTTP_WEB:9999 studioetrange/docker-sickrage:SICKRAGE_VERSION
-
-_Note : you have to choose DATA_DIR, SICKRAGE_HTTP_PORT, SUPERVISOR_HTTP_WEB and SICKRAGE_VERSION_
 
 ### run a shell inside this container (without sickrage running)
 
@@ -69,4 +65,4 @@ _Note : you have to choose DATA_DIR, SICKRAGE_HTTP_PORT, SUPERVISOR_HTTP_WEB and
 
 	https://registry.hub.docker.com/u/studioetrange/docker-sickrage/
 
-* _update.sh_ is only an admin script which update and add new sickrage versions. This script do not auto create missing tag in docker hub webui. It is only for admin/owner purpose.
+* _update.sh_ is only an admin script which update and add new versions. This script do not auto create missing tag in docker hub webui. It is only for admin/owner purpose.

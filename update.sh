@@ -43,13 +43,11 @@ echo "******** UPDATE LAST RELEASE ********"
 # Update last release
 last_release=$(github_releases 1)
 version_name="$last_release"
-version_full=$(echo $version_name | tr -d 'v')
-version_major=$(echo $version_full | cut -d '.' -f 1)
+version_number=$(echo $version_name | sed -e 's/v//g')
 echo " * Process last release $version_name"
-echo " ** major version number : $version_major"
-echo " ** full version id : $version_full"
+echo " ** version id : $version_number"
 
-sed -i .bak -e "s/ENV SICKRAGE_VERSION.*/ENV SICKRAGE_VERSION $version_name/" "Dockerfile"
+sed -i .bak -e "s,ENV SICKRAGE_VERSION.*,ENV SICKRAGE_VERSION $version_name," "Dockerfile"
 rm -f Dockerfile.bak
 
 echo
@@ -58,23 +56,21 @@ echo "******** UPDATE ALL RELEASES ********"
 releases=$(github_releases)
 for rel in $releases; do
 	version_name="$rel"
-	version_full=$(echo $version_name | tr -d 'v')
-	version_major=$(echo $version_full | cut -d '.' -f 1)
+	version_number=$(echo $version_name | sed -e 's/v//g')
 	echo " * Process release $version_name"
-	echo " ** major version number : $version_major"
-	echo " ** full version id : $version_full"
+	echo " ** version number : $version_number"
 
-	mkdir -p "$version_full"
-	cp -f supervisord* "$version_full"
-	cp -f Dockerfile "$version_full/Dockerfile"
-	sed -i .bak -e "s/ENV SICKRAGE_VERSION.*/ENV SICKRAGE_VERSION $version_name/" "$version_full/Dockerfile"
-	rm -f "$version_full/Dockerfile.bak"
+	mkdir -p "$version_number"
+	cp -f supervisord* "$version_number"
+	cp -f Dockerfile "$version_number/Dockerfile"
+	sed -i .bak -e "s,ENV SICKRAGE_VERSION.*,ENV SICKRAGE_VERSION $version_name," "$version_number/Dockerfile"
+	rm -f "$version_number/Dockerfile.bak"
 	echo
 done
 
 echo "******** UPDATE README ********"
-list_release=$(echo $releases | tr -d 'v' | sed -e 's/ /\, /g')
-last_release_tag=$(echo $last_release | tr -d 'v')
+list_release=$(echo $releases | sed -e 's/v//g' | sed -e 's/ /\, /g')
+last_release_tag=$(echo $last_release | sed -e 's/v//g')
 sed -i .bak -e "s/latest,.*/latest, $list_release/" "README.md"
 rm -f "README.md.bak"
 
