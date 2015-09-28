@@ -63,6 +63,6 @@ Current latest tag is version __4.0.22__
 
 * This github repository is linked to an automated build in docker hub registry.
 
-	https://registry.hub.docker.com/u/studioetrange/docker-sickrage/
+	https://hub.docker.com/r/studioetrange/docker-sickrage/
 
 * _update.sh_ is only an admin script which update and add new versions. This script do not auto create missing tag in docker hub webui. It is only for admin/owner purpose.
