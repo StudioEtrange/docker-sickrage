@@ -27,7 +27,7 @@ function update_readme() {
 	local version=$2
 	local list="$3"
 
-	sed -i .bak -e "s/latest,.*/latest, $list/" "README.md"
+	sed -i .bak -e "s/latest,.*/latest, $list/" "$path"
 	sed -i .bak -e "s/^Current latest tag is version __.*__/Current latest tag is version __"$version"__/" "$path"
 	
 	rm -f "$path".bak
