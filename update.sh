@@ -19,9 +19,6 @@ function update_dockerfile() {
 	rm -f "$path".bak
 }
 
-
-
-# GENERIC FUNCTIONS ----------------------------
 function update_readme() {
 	local path=$1
 	local version=$2
@@ -31,6 +28,31 @@ function update_readme() {
 	sed -i .bak -e "s/^Current latest tag is version __.*__/Current latest tag is version __"$version"__/" "$path"
 	
 	rm -f "$path".bak
+}
+
+
+# GENERIC FUNCTIONS ----------------------------
+# sort a list of version
+# sorted=$(sort_version "1.0.1 1.2.0 1.1.9c 1.1.9a 1.1.10" "DESC")
+# echo $sorted ===> 1.2.0 1.1.10 1.1.9a 1.1.9c 1.0.1
+function sort_version() {
+	local list=$1
+	local opt="$2"
+
+	local mode="ASC"
+	local separator="."
+
+	local flag_sep=OFF
+	for o in $opt; do
+		[ "$o" == "ASC" ] && mode=$o
+		[ "$o" == "DESC" ] && mode=$o
+		[ "$flag_sep" == "ON" ] && separator="$o" && flag_sep=OFF
+		[ "$o" == "SEP" ] && flag_sep=ON
+	done
+
+	[ "$mode" == "ASC" ] && echo "$list" | tr ' ' '\n' | sort -t$separator -k 1,1n -k 2,2n -k 3,3n -k 4,4n -k 5,5n -k 6,6n -k 7,7n | tr '\n' ' '
+	[ "$mode" == "DESC" ] && echo "$list" | tr ' ' '\n' | sort -t$separator -k 1,1nr -k 2,2nr -k 3,3nr -k 4,4nr -k 5,5nr -k 6,6nr -k 7,7nr | tr '\n' ' '
+
 }
 
 function github_releases() {
@@ -43,8 +65,8 @@ function github_releases() {
 	done
 
 	local sorted
-	[ "$max" == "" ] && sorted=$(echo "$result" | tr ' ' '\n' | sort -r | tr '\n' ' ' | sed -e 's/^ *//' -e 's/ *$//')
-	[ ! "$max" == "" ] && sorted=$(echo "$result" | tr ' ' '\n' | sort -r  | head -n $max | tr '\n' ' ' | sed -e 's/^ *//' -e 's/ *$//' )
+	[ "$max" == "" ] && sorted=$(echo "$(sort_version "$result" "DESC")" | sed -e 's/^ *//' -e 's/ *$//')
+	[ ! "$max" == "" ] && sorted=$(echo "$(sort_version "$result" "DESC")" | tr ' ' '\n' | head -n $max | tr '\n' ' ' | sed -e 's/^ *//' -e 's/ *$//' )
 	echo "$sorted"
 }
 
@@ -58,10 +80,13 @@ function github_tags() {
 	done
 
 	local sorted
-	[ "$max" == "" ] && sorted=$(echo "$result" | tr ' ' '\n' | sort -r | tr '\n' ' ' | sed -e 's/^ *//' -e 's/ *$//')
-	[ ! "$max" == "" ] && sorted=$(echo "$result" | tr ' ' '\n' | sort -r  | head -n $max | tr '\n' ' ' | sed -e 's/^ *//' -e 's/ *$//' )
+	[ "$max" == "" ] && sorted=$(echo "$(sort_version "$result" "DESC")" | sed -e 's/^ *//' -e 's/ *$//')
+	[ ! "$max" == "" ] && sorted=$(echo "$(sort_version "$result" "DESC")" | tr ' ' '\n' | head -n $max | tr '\n' ' ' | sed -e 's/^ *//' -e 's/ *$//' )
 	echo "$sorted"
 }
+
+
+
 
 
 
