@@ -50,8 +50,8 @@ function sort_version() {
 		[ "$o" == "SEP" ] && flag_sep=ON
 	done
 
-	[ "$mode" == "ASC" ] && echo "$list" | tr ' ' '\n' | sort -t$separator -k 1,1n -k 2,2n -k 3,3n -k 4,4n -k 5,5n -k 6,6n -k 7,7n | tr '\n' ' '
-	[ "$mode" == "DESC" ] && echo "$list" | tr ' ' '\n' | sort -t$separator -k 1,1nr -k 2,2nr -k 3,3nr -k 4,4nr -k 5,5nr -k 6,6nr -k 7,7nr | tr '\n' ' '
+	[ "$mode" == "ASC" ] && echo "$list" | tr ' ' '\n' | sort -n -t$separator -k 1,1n -k 2,2n -k 3,3n -k 4,4n -k 5,5n -k 6,6n -k 7,7n | tr '\n' ' '
+	[ "$mode" == "DESC" ] && echo "$list" | tr ' ' '\n' | sort -n -r -t$separator -k 1,1nr -k 2,2nr -k 3,3nr -k 4,4nr -k 5,5nr -k 6,6nr -k 7,7nr | tr '\n' ' '
 
 }
 
