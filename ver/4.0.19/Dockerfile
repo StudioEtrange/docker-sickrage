@@ -10,10 +10,10 @@ RUN apt-get update \
 	
 
 # SICKRAGE install -------------
-ENV SICKRAGE_VERSION v4.0.22
+ENV ITEM_VERSION v4.0.19
 
 WORKDIR /opt/sickrage
-RUN curl -k -SL "https://github.com/SiCKRAGETV/SickRage/archive/$SICKRAGE_VERSION.tar.gz" \
+RUN curl -k -SL "https://github.com/SiCKRAGETV/SickRage/archive/$ITEM_VERSION.tar.gz" \
 	| tar -xzf - -C /opt/sickrage --strip-components=1
 
 # SUPERVISOR -------------

@@ -26,7 +26,7 @@ function update_dockerfile() {
 	local path=$1
 	local version=$2
 
-	sed -i .bak -e "s,ENV COUCHPOTATO_VERSION.*,ENV COUCHPOTATO_VERSION $version," "$path"
+	sed -i .bak -e "s,ENV ITEM_VERSION.*,ENV ITEM_VERSION $version," "$path"
 	rm -f "$path".bak
 }
 
