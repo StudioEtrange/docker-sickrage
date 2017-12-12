@@ -26,7 +26,7 @@ function update_dockerfile() {
 	local path=$1
 	local version=$2
 
-	sed -i .bak -e "s,ENV ITEM_VERSION.*,ENV ITEM_VERSION $version," "$path"
+	sed -i.bak -e "s,ENV ITEM_VERSION.*,ENV ITEM_VERSION $version," "$path"
 	rm -f "$path".bak
 }
 
@@ -36,8 +36,8 @@ function update_readme() {
 	local version=$2
 	local list="$3"
 
-	sed -i .bak -e "s/latest,.*/latest, $list/" "$path"
-	sed -i .bak -e "s/^Current latest tag is version __.*__/Current latest tag is version __"$version"__/" "$path"
+	sed -i.bak -e "s/latest,.*/latest, $list/" "$path"
+	sed -i.bak -e "s/^Current latest tag is version __.*__/Current latest tag is version __"$version"__/" "$path"
 	
 	rm -f "$path".bak
 }
