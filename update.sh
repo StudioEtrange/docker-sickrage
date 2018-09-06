@@ -6,12 +6,14 @@ cd "$_CURRENT_FILE_DIR"
 
 # PARAMETERS ----------------------------
 GITHUB_REPO="SiCKRAGETV/SickRage"
-RELEASE_NAME_FILTER="v"
+# remove this string to version name (ex : with 'build' value, 'build507' becomes '507')
+FILTER_VERSION_NAME="v"
 
 VERSION_SEPARATOR="."
+# revert version ordering for letter behind number (ex: with 'ON' value, 1.2 is newer than 1.2rc1)
 VERSION_INVERSE_LAST_CHAR=OFF
 
-# Use github tag instead of github release
+# Use github tags instead of github releases
 USE_TAG_AS_RELEASE=0
 
 # INITIALIZE ----------------------------
@@ -194,6 +196,8 @@ function sort_version() {
 
 }
 
+# github releases have a 'name' which is a version name and a 'tag_name' wich is often a version number
+# so we use 'tag_name' attribute
 function github_releases() {
 	local max=$1
 
@@ -209,6 +213,8 @@ function github_releases() {
 	echo "$sorted"
 }
 
+# github tags have only a 'name' which is often a version number
+# so we use 'name' attribute
 function github_tags() {
 	local max=$1
 
@@ -234,8 +240,8 @@ function github_tags() {
 
 
 # MAIN ----------------------------
-# github tag does not have special char before tag number -- sed regexp can not be empty, so a foo string is used
-[ "$USE_TAG_AS_RELEASE" == "1" ] && RELEASE_NAME_FILTER="XXXXXXXX"
+# sed regexp can not be empty, so a foo string is used
+[ "$FILTER_VERSION_NAME" == "" ] && FILTER_VERSION_NAME="XXXXXXXXXXXX"
 
 echo
 echo "******** UPDATE LAST ********"
@@ -243,12 +249,11 @@ echo "******** UPDATE LAST ********"
 [ "$USE_TAG_AS_RELEASE" == "1" ] && last_release=$(github_tags 1)
 [ ! "$USE_TAG_AS_RELEASE" == "1" ] && last_release=$(github_releases 1)
 
-version_name="$last_release"
-version_number=$(echo $version_name | sed -e "s,$RELEASE_NAME_FILTER,,g")
-echo " * Process last release $version_name"
+version_full_number="$last_release"
+version_number=$(echo $version_full_number | sed -e "s,$FILTER_VERSION_NAME,,g")
 echo " ** version number : $version_number"
 
-update_dockerfile "Dockerfile" "$version_name"
+update_dockerfile "Dockerfile" "$version_full_number"
 
 echo
 echo "******** UPDATE ALL ********"
@@ -258,21 +263,21 @@ rm -Rf "ver"
 [ ! "$USE_TAG_AS_RELEASE" == "1" ] && releases=$(github_releases)
 
 for rel in $releases; do
-	version_name="$rel"
-	version_number=$(echo $version_name | sed -e "s,$RELEASE_NAME_FILTER,,g")
-	echo " * Process release $version_name"
+	version_full_number="$rel"
+	version_number=$(echo $version_full_number | sed -e "s,$FILTER_VERSION_NAME,,g")
+	echo " * Process last release $version_full_number"
 	echo " ** version number : $version_number"
 
 	mkdir -p "ver/$version_number"
 	cp -f supervisord* "ver/$version_number"
 	cp -f Dockerfile "ver/$version_number/Dockerfile"
-	update_dockerfile "ver/$version_number/Dockerfile" "$version_name"
+	update_dockerfile "ver/$version_number/Dockerfile" "$version_full_number"
 	echo
 done
 
 echo "******** UPDATE README ********"
-list_release=$(echo $releases | sed -e "s,$RELEASE_NAME_FILTER,,g" | sed -e 's/ /\, /g')
-last_release_tag=$(echo $last_release | sed -e "s,$RELEASE_NAME_FILTER,,g")
+list_release=$(echo $releases | sed -e "s,$FILTER_VERSION_NAME,,g" | sed -e 's/ /\, /g')
+last_release_tag=$(echo $last_release | sed -e "s,$FILTER_VERSION_NAME,,g")
 
 update_readme "README.md" "$last_release_tag" "$list_release"
 
@@ -280,6 +285,7 @@ echo
 echo "************************************"
 echo " YOU SHOULD NOW ADD MISSING VERSION THROUGH"
 echo " Docker Hub WebUI : AUTOMATED BUILD REPOSITORY"
+
 
 
 
