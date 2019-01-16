@@ -1,3 +1,5 @@
+# NOTE : not maintained : use https://github.com/StudioEtrange/docker-medusa instead
+
 # docker sickrage by StudioEtrange
 
 * Run sickrage inside a docker container built upon debian
